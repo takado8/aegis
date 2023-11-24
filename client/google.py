@@ -1,39 +1,51 @@
-# -*- coding: utf-8 -*-
-
-# Sample Python code for youtube.comments.delete
-# See instructions for running these code samples locally:
-# https://developers.google.com/explorer-help/code-samples#python
-
+from googleapiclient.discovery import build
 import os
-
-import google_auth_oauthlib.flow
-import googleapiclient.discovery
-import googleapiclient.errors
-
-scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
+import json
 
 
-def main():
+with open('../config.json') as file:
+    config = json.load(file)
+    api_key = config.get('youtube_api_key')
+
+youtube = build('youtube', 'v3', developerKey=api_key)
+
+
+def get_video_comments(service, **kwargs):
+    comments = {}
+    results = service.commentThreads().list(**kwargs).execute()
+
+    while results:
+        for item in results['items']:
+            comment_id = item['id']
+            comment_text = item['snippet']['topLevelComment']['snippet']['textDisplay']
+            comments[comment_id] = comment_text
+
+        # Check if there is a next page
+        if 'nextPageToken' in results:
+            kwargs['pageToken'] = results['nextPageToken']
+            results = service.commentThreads().list(**kwargs).execute()
+        else:
+            break
+    return comments
+
+
+def delete_comment(id):
     # Disable OAuthlib's HTTPS verification when running locally.
     # *DO NOT* leave this option enabled in production.
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
-    api_service_name = "youtube"
-    api_version = "v3"
-    client_secrets_file = "YOUR_CLIENT_SECRET_FILE.json"
-
-    # Get credentials and create an API client
-    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
-        client_secrets_file, scopes)
-    credentials = flow.run_console()
-    youtube = googleapiclient.discovery.build(
-        api_service_name, api_version, credentials=credentials)
-
     request = youtube.comments().delete(
-        id="YOUR_COMMENT_ID"
+        id=id
     )
     request.execute()
 
 
 if __name__ == "__main__":
-    main()
+    delete_comment('Ugy_XwUVdKnmG57-xeR4AaABAg')
+    # video_id = 'ZTSq_W0FnW4'
+    # comments_dict = get_video_comments(youtube, part='snippet', videoId=video_id, textFormat='plainText')
+    #
+    # # Print each comment and its ID
+    # for comment_id, comment_text in comments_dict.items():
+    #     print(f"Comment ID: {comment_id}")
+    #     print(f"Comment Text: {comment_text}\n")

@@ -3,7 +3,7 @@ import os
 import json
 
 
-with open('../config.json') as file:
+with open('../config/config.json') as file:
     config = json.load(file)
     api_key = config.get('youtube_api_key')
 

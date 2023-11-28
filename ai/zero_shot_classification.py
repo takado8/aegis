@@ -75,9 +75,9 @@ if __name__ == '__main__':
     labels1 = ['komentarz jest ofensywny', 'komentarz jest przyjazny i przyjacielski',
               'komentarz jest neutralny']
 
-    labels_emotions = ['offensive',
-                       'positive',
-                        'neutral', 'negative']
+    labels_emotions = ['offensive to others',
+                       'positive and friendly',
+                        'neutral emotionally', 'negative']
     labels_satisfaction = ['komentarz na youtube jest nacechowany negatywnie', 'komentarz na youtube jest nacechowany pozytywnie',
                            'komentarz na youtube jest neutralny']
     zero_shot(labels_emotions, embedding_model)

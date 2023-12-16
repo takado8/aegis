@@ -5,7 +5,7 @@ from openai import OpenAI
 
 GPT3 = "gpt-3.5-turbo-1106"
 
-input_datapath = "../data/testdata1.csv"
+input_datapath = "../data/wiatraki_comments.csv"
 
 
 def load_dataset():
@@ -23,25 +23,7 @@ def get_sentiment(txt):
                                       " \"Komentarz jest obraźliwy i niekonstruktywny\", "
                                        "\"neutralny\", "
                                       "\"wyraża niezadowolenie\""},
-        # {"role": "system", "content": "krótko podsumuj komentarz z youtube"},
         {"role": "user", "content": txt.lower()}]
-
-    # functions = [{
-    #             "name": "dopasuj_sentyment_do_komentarza",
-    #             "parameters": {
-    #                 "type": "object",
-    #                 "properties": {
-    #                     "sentyment": {
-    #                         "type": "string",
-    #                         "items": {
-    #                             "type": "string",
-    #                             "enum": ["pozytywny", "obraźliwy", "neutralny"]
-    #                         }
-    #                     }
-    #                 },
-    #                 "required": ["sentyment"],
-    #             }
-    #         }]
 
     client = OpenAI(api_key=os.environ['GPT_KEY'])
 

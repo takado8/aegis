@@ -15,8 +15,9 @@ from sklearn.metrics import classification_report
 embedding_model = "text-embedding-ada-002"
 embedding_encoding = "cl100k_base"  # this the encoding for text-embedding-ada-002
 max_tokens = 8000  # the maximum for text-embedding-ada-002 is 8191
-datafile_with_embedding_path = "../data/testdata1_with_embedding.csv"
-input_datapath = "../data/testdata1_eng.csv"
+datafile_with_embedding_path = "../data/wiatraki_comments_with_embedding.csv"
+input_datapath = "../data/wiatraki_comments.csv"
+# input_datapath = "../data/testdata1_eng.csv"
 
 
 def load_dataset():
@@ -65,7 +66,8 @@ def zero_shot(labels, model, df=None):
     df['predicted_label'] = df["embedding"].apply(lambda x: label_score(x, label_embeddings))
 
     print('Predicted labels:')
-    print(df['predicted_label'])
+    for label, comment in zip(df['predicted_label'], df['comment']):
+        print(f'{label}: {comment}')
 
 
 if __name__ == '__main__':
@@ -80,4 +82,4 @@ if __name__ == '__main__':
                         'neutral emotionally', 'negative']
     labels_satisfaction = ['komentarz na youtube jest nacechowany negatywnie', 'komentarz na youtube jest nacechowany pozytywnie',
                            'komentarz na youtube jest neutralny']
-    zero_shot(labels_emotions, embedding_model)
+    zero_shot(labels1, embedding_model)
